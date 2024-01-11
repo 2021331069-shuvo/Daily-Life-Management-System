@@ -55,10 +55,8 @@ The idea developed by,
 # Team members:
 1. Ali Ashraf Tanvir<br>
 Reg No: 2021331001<br>
-
 2.Md Shuvo Khan<br>
-Reg No: 202133106<br>
-
+Reg No: 2021331069<br>
 3. Dipu Debnath<br>
-Reg No: 2021331011<br>
+Reg No: 2021331011
 
