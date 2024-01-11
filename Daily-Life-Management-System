@@ -1,0 +1,64 @@
+#include<bits/stdc++.h>
+#include <ctime>
+#include <chrono>
+#include <thread>
+#define WIN32_LEAN_AND_MEAN 1
+#include <winsock2.h>
+#include <windows.h>
+using namespace std;
+
+const char* ITALIC_START = "\033[3m";
+const char* ITALIC_END = "\033[0m";
+const char* BLUE_COLOR = "\033[1;34m";
+const char* RESET_COLOR = "\033[0m";
+
+void displayCurrentTime() {
+
+
+    while (true) {
+        time_t currentTime = time(nullptr);
+        struct tm* localTime = localtime(&currentTime);
+
+        CONSOLE_SCREEN_BUFFER_INFO csbi;
+        int columns, rows;
+
+        GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+        columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+        rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+
+
+        for (int i=0; i<(rows-5)/2; i++)
+        {
+            cout <<"\n";
+        }
+
+
+
+        cout << "\n";
+        for (int i = 0; i < (columns - 43) / 2 - 4; i++) {
+            cout << " ";
+        }
+        cout << "    |-----------------------------------------|" << endl;
+
+        cout << "\n";
+        for (int i = 0; i < (columns - 43) / 2 - 4; i++) {
+            cout << " ";
+        }
+        cout << BLUE_COLOR << ITALIC_START << "    Current time is: " << RESET_COLOR << asctime(localTime);
+
+        cout << "\n";
+        for (int i = 0; i < (columns - 43) / 2 - 4; i++) {
+            cout << " ";
+        }
+        cout << "    |-----------------------------------------|" << endl;
+
+        this_thread::sleep_for(chrono::seconds(1));
+
+        system("cls");
+    }
+}
+
+int main() {
+    displayCurrentTime();
+    return 0;
+}
