@@ -9,6 +9,28 @@ struct taskStore{
     string taskName;
 };
 deque<taskStore>task;
+void printTask(){
+  for(int i=0;i<task.size();i++){
+    cout<<"TASK NO "<<i+1<<":\n";
+    cout<<task[i].taskName<<"\n";
+    cout<<"Start at: "<<task[i].startHr<<" : "<<task[i].startMn<<" \nEnd at:  "<<task[i].endHr<<" : "<<task[i].endMn<<" \n";
+  }
+}
+void deleteTask(){
+  int no=0;
+  cout<<"Are you sure to delete any task? type 1 for delete,0 oterwise:\n";
+  cin>>no;
+  if(no==0)return;
+  printTask();
+
+  cout<<"Which task would you delete?Please type the task no:  \n";
+  int taskNo;
+  cin>>taskNo;
+  task.erase(task.begin()+taskNo-1);
+  cout<<"Task "<<taskNo<<" is deleted\n";
+}
+
+
 void taskInput(){
   //int size=task.size();
 
@@ -23,8 +45,9 @@ void taskInput(){
 
   cout<<"type end hour and min with a space:\n";
     cin>>task[size-1].endHr>>task[size-1].endMn;
-  cout<<"what task you will do:\n";
+  cout<<"what task will you do:\n";
     cin>>task[size-1].taskName;
+    cout<<"Task is successfully added.\n";
 }
 
 void specificTaskT(){
@@ -55,14 +78,34 @@ void specificTaskT(){
        
 }
 int main(){
-    int t=1;
+  bool go;
   do{
-  taskInput();
-  specificTaskT();
-  cout<<"continue by typing 1, for stop-type 0\n";
-    cin>>t;
+     go=true;
+     specificTaskT();
+     cout<<"Type 1 for adding task.\n";
+     cout<<"Type 2 for show all task.\n";
+     cout<<"Type 3 for delete a task.\n";
+     cout<<"Type 4 for delete all task.\n";
+     cout<<"Type 0 for terminate program.\n";
+     int command=0;
+     cin>>command;
+     switch(command){
+      case 1 :taskInput();
+              break;
+      case 2 :printTask();
+              break;
+      case 3 :deleteTask();
+              break;
+      case 4 ://deleteAll();
+              break;
+      case 0 :go=false;
+              break;
+      default :cout<<"Invalid input\n";
+               break;
+     }
+     
   }
-  while(t);
-  
+  while(go);
+    
   return 0;
 }
