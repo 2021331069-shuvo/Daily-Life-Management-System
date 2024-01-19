@@ -1,7 +1,9 @@
 #include <bits/stdc++.h>
-//#include <ctime>
+#include <thread>
 using namespace std;
-struct taskStore{
+
+struct taskStore
+{
     int startHr;
     int startMn;
     int endHr;
@@ -9,36 +11,158 @@ struct taskStore{
     string taskName;
 };
 deque<taskStore>task;
+bool compare(taskStore &node1,taskStore &node2)
+{
+  if(node1.startHr<node2.startHr){
+    return true;
+  }
+  else if(node1.startHr==node2.startHr){
+    if(node1.startMn<node2.startMn){
+      return true;
+    }
+  }
+  return false;
+}
+void printAllFromFile(){
+      ifstream readFile("my_file1.txt");
+    if (readFile.is_open()) {
+      string line;
+        while (getline(readFile, line)) {
+            cout << line <<endl;
+        }
+        readFile.close();
+    } 
+    else {
+        cout << "Error reading from file!" << endl;
+    }
+}
+string dateToString(int year,int month,int day){
+    string y=to_string(year),m=to_string(month),d=to_string(day);
+    if(m.size()==1)m="0"+m;
+    if(d.size()==1)d="0"+d;
+    return (d+"/"+m+"/"+y);
+}
+void addToFile(string task)
+{
+    time_t now = time(0);
+    tm* time = localtime(&now);
+    int year=(time->tm_year)+1900;
+    int month=time->tm_mon+1;
+    int day=time->tm_mday;
+    string key=dateToString(year,month,day);
+   // cout<<key<<" key\n"<<task<<" task\n";
+    ofstream myFile("my_file1.txt",ios::app);
+      if (myFile.is_open()) 
+      {
+        myFile << key<<" ";
+        myFile << task<<" [";
+         myFile<<"Updated time: "<<time->tm_hour<<":"<<time->tm_min<<":"<<time->tm_sec<<"]\n";
+        myFile.close();
+      // cout << "Text written to file successfully!" <<endl;
+    } 
+    else{
+        cout<<"can not write\n";
+    }
+
+}
+void addToHistory(taskStore node){
+    string all;
+    all+="Started at: "+to_string(node.startHr)+":"+to_string(node.startMn)+" ";
+    all+="End: "+to_string(node.endHr)+":"+to_string(node.endMn)+" ";
+    all+="Task: "+node.taskName;
+    addToFile(all);
+}
+void writingNote(){
+  int cm=0;
+  cout<<"Type 1 for showing your note\n";
+  cout<<"Type 2 for addind your note\n";
+  cout<<"Type 3 for clearing your note\n";
+  cout<<"Type 0 for exist.\n";
+  cin>>cm;
+
+    switch(cm)
+    {
+      case 1: try{
+            cout<<"---------------------------------------------------\n";
+           ifstream rFile("my_note.txt");
+             if (rFile.is_open()) {
+             string line;
+             while (getline(rFile, line)) 
+             {
+             cout << line <<endl;
+             }
+             cout<<"---------------------------------------------------\n";
+             rFile.close();
+            }
+            else{
+              cout<<"file can not open\n";
+            } 
+      }
+      catch(const exception& e){
+         std::cerr << "Error reading file: " << e.what() << std::endl;
+      }
+            break;
+      case 2:
+             try{
+             ofstream noteFile("my_note.txt",ios::app);
+           if (noteFile.is_open()){
+            cout<<"type your note here,(after finish enter 0 ) :\n";
+            string s;
+            cin.ignore();
+            do
+            {
+             getline(cin,s);
+             if(s[0]!=0||s.size()!=1)noteFile <<s<<"\n";
+            }
+            while((s.size()!=1&&s[0]!='0'));
+            noteFile.close();
+           }
+       } 
+            catch(const exception& e){
+         cerr << "Error reading file: " << e.what() << endl;
+      }
+            break;
+      case 3:
+            if(1){
+              ofstream myFile("my_note.txt");
+              if(myFile.is_open()){
+                 myFile.clear();
+                 cout<<"cleared successfully!\n";
+                 addToFile("Note cleared.");
+                 myFile.close();
+              }
+              else{
+                cout<<"file not open\n";
+              }
+             }
+            break;
+   default :
+           break;
+
+    }
+}
+
 void printTask(){
+  cout<<"--------------------------------------------------------\n";
+  if(task.size()==0){
+    cout<<"Empty!\n";
+    return;
+  }
   for(int i=0;i<task.size();i++){
     cout<<"TASK NO "<<i+1<<":\n";
     cout<<task[i].taskName<<"\n";
     cout<<"Start at: "<<task[i].startHr<<" : "<<task[i].startMn<<" \nEnd at:  "<<task[i].endHr<<" : "<<task[i].endMn<<" \n";
   }
+  cout<<"--------------------------------------------------------\n";
 }
-void deleteTask(){
-  int no=0;
-  cout<<"Are you sure to delete any task? type 1 for delete,0 oterwise:\n";
-  cin>>no;
-  if(no==0)return;
-  printTask();
-
-  cout<<"Which task would you delete?Please type the task no:  \n";
-  int taskNo;
-  cin>>taskNo;
-  task.erase(task.begin()+taskNo-1);
-  cout<<"Task "<<taskNo<<" is deleted\n";
-}
-
 
 void taskInput(){
   //int size=task.size();
 
   taskStore newnode;
-     task.push_back(newnode);
+  task.push_back(newnode);
 
-  // task.resize(size+1);
-   int size=task.size();
+   signed int size=task.size();
 
   cout<<"type start hour and min with a space (like 11 35):\n";
     cin>>task[size-1].startHr>>task[size-1].startMn;
@@ -46,13 +170,18 @@ void taskInput(){
   cout<<"type end hour and min with a space:\n";
     cin>>task[size-1].endHr>>task[size-1].endMn;
   cout<<"what task will you do:\n";
-    cin>>task[size-1].taskName;
+     cin.ignore();
+    getline(cin,task[size-1].taskName);
     cout<<"Task is successfully added.\n";
+    addToHistory(task[size-1]);//--Adding file as history
+    addToFile("Task Inputed.");
+    sort(task.begin(),task.end(),compare);
 }
 
-void specificTaskT(){
-    time_t now = time(0); // Get the current time as a time_t value
-    tm* local_time = localtime(&now); // Convert time_t to tm struct for local time
+void currentAndUpcoming(){
+  
+     time_t now = time(0); 
+    tm* local_time = localtime(&now);  
 
     int hour = local_time->tm_hour;
     int minute = local_time->tm_min;
@@ -66,27 +195,62 @@ void specificTaskT(){
      
         if(hour==task[i].endHr&&minute>task[i].endMn)continue;
        
+       cout<<"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
         cout<<"Your task:\n";
         cout<<task[i].taskName<<"\n";
+        if(i!=(task.size()-1)){
+          cout<<"--------------------------------------------------------\n";
+        cout<<"Upcoming Task: \n"<<task[i+1].taskName<<"\n";
+        cout<<"Start at: "<<task[i].startHr<<" : "<<task[i].startMn<<" \nEnd at:  "<<task[i].endHr<<" : "<<task[i].endMn<<" \n";
+        }
+        else{
+           cout<<"--------------------------------------------------------\n";
+          cout<<"No upcoming task to show!\n";
+        }
+        
         flag=false;
         break;
       }
     }
     if(flag){
-      cout<<"NO Task Here!\n";
+      cout<<"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
+      cout<<"There is no Task at this time!\n";
+      
+      for(int i=0;i<task.size();i++){
+
+      if(hour>=task[i].startHr){
+          cout<<"Upcoming Task: \n"<<task[i+1].taskName<<"\n";
+          cout<<"Start at: "<<task[i].startHr<<" : "<<task[i].startMn<<" \nEnd at:  "<<task[i].endHr<<" : "<<task[i].endMn<<" \n";
+          return;
+      }
+
+    }
+    cout<<"--------------------------------------------------------\n";
+      cout<<"No upcoming task to show!\n";
+      
     }
        
 }
+
 int main(){
   bool go;
+  
   do{
+   
      go=true;
-     specificTaskT();
+    
+     currentAndUpcoming();
+     cout<<"--------------------------------------------------------\n";
      cout<<"Type 1 for adding task.\n";
      cout<<"Type 2 for show all task.\n";
      cout<<"Type 3 for delete a task.\n";
      cout<<"Type 4 for delete all task.\n";
-     cout<<"Type 0 for terminate program.\n";
+     cout<<"Type 5 for  show and delete note.\n";
+     cout<<"Type 6 for Showing History.\n";
+     cout<<"Type 7 for clear History.\n";
+     cout<<"Type 0 for skip:\n";
+     
+     
      int command=0;
      cin>>command;
      switch(command){
@@ -94,16 +258,42 @@ int main(){
               break;
       case 2 :printTask();
               break;
-      case 3 :deleteTask();
+      case 3 :
+             //deleteTask();
               break;
-      case 4 ://deleteAll();
+      case 4 :task.clear();
+              addToFile("All task cleared.");
               break;
-      case 0 :go=false;
+      case 5 :writingNote();
               break;
+      case 6 :printAllFromFile();
+              break;
+      case 7 : if(1){
+              ofstream myFile("my_file1.txt");
+              if(myFile.is_open()){
+                 cout<<"History cleared.\n";
+                 myFile.clear();
+                 myFile.close();
+              }
+              else{
+                cout<<"file not open\n";
+              }
+              }
+              break;
+       case 0 ://go=false;
+              break; 
       default :cout<<"Invalid input\n";
                break;
      }
-     
+     cout<<"Type 1 for continue, 0 for terminate program.\n";
+     int type;
+     cin>>type;
+     if(type==0){
+      go=false;
+     }
+     else{
+      system("clear");
+     }
   }
   while(go);
     
