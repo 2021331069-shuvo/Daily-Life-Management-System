@@ -29,12 +29,35 @@ the methods represent the actions the object can perform. For example, a task ob
 data for the task name and performing time/deadline. The task object will also have methods for
 replacing, editing and deleting the task.
 # Features:
-1. Show time.
-2. Show routine work.
-3. Routine Update.
-4. Reminder work before ten minutes.
-5. Password for updating.
-6. password updating.
+ List of Feature 
+ 1.  Current time and date 
+ 2.  Current task show if have any with done or not 
+ 3.  Upcoming task show if have any. 
+ 4.  Adding Task under different topic. 
+ 5.  Immediate Marking done current task. 
+ 1.  Just Mark 
+ 2.  Mark and Delete the task 
+ 6.  Finance Manager. 
+ 1.  Add Income with income source 
+ 2.  Add Expense with expense details 
+ 3.  View balance with details 
+ 7.  BMI 
+ 1.  Calculate BMI. 
+ 2.  Show BMI catagory. 
+ 3.  Show previous days weight. 
+ 8.  Note 
+ 1.  See note 
+ 2.  Adding to note 
+ 3.  Clear note 
+ 9.  Todays Task History 
+ 10.  Show all task 
+ 11.  Mark any Task that added. 
+ 12.  Delete a task 
+ 13.  Delete all task 
+ 14.  Adding a topic 
+ 15.  Print task(in Topic) 
+ 16.  Todays summary(as topic wise spend hour) 
+ 17.  show, set or clear History(Summary)
 # Project Testing
 The daily life management system will be tested by creating test cases that cover all of the
 system's functionality. The test cases will be executed to ensure the system works correctly.
@@ -50,13 +73,21 @@ meet the individual needs of each user.
 4. Implementing algorithm where it needs.
 5. Promote teamwork and collaboration skills by assigning and implementing group projects.
 The idea developed by,
+
 # Team name: Foot_Fool
 
 # Team members:
 1. Ali Ashraf Tanvir<br>
 Reg No: 2021331001<br>
+Most Contribution: Todo list,Note part
+
 2. Md Shuvo Khan<br>
 Reg No: 2021331069<br>
+Most Contribuion: Clock part and Organize the interface with ANSI code coler.
+
 3. Dipu Debnath<br>
 Reg No: 2021331011
+Most Contribution: Finance Manager,Health part.
+
+
 
